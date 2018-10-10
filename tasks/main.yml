@@ -1,0 +1,24 @@
+---
+# tasks file for mrdatamapper.akademiano_youtrack
+
+- name: Install required packages
+  become: yes
+  apt:
+    name: "{{list_youtrack_required_packages}}"
+    state: latest
+
+- name: Add the user 'youtrack'
+  user:
+    name: youtrack
+    shell: /bin/bash
+  become: yes
+
+- file:
+    path: /opt/youtrack
+    state: directory
+    mode: "u=rwX,g=rX,o=-rwx"
+    owner: youtrack
+  become: yes
+  changed_when: false
+
+
