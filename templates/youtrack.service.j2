@@ -1,0 +1,13 @@
+[Unit]
+Description=Youtrack
+Requires=network.target
+After=syslog.target network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/youtrack
+ExecStart=/usr/bin/java -jar /opt/youtrack/youtrack.jar --J-Xmx1024m --J-Djava.security.egd=/dev/./urandom --data-dir=/var/lib/youtrack/data   --no-browser  8080
+User=youtrack
+
+[Install]
+WantedBy=default.target

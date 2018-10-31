@@ -19,6 +19,78 @@
     mode: "u=rwX,g=rX,o=-rwx"
     owner: youtrack
   become: yes
+
+- file:
+    path: /var/lib/youtrack/data
+    state: directory
+    mode: "u=rwX,g=rX,o=-rwx"
+    owner: youtrack
+  become: yes
+
+
+- file:
+    path: /var/lib/youtrack/backup
+    state: directory
+    mode: "u=rwX,g=rX,o=-rwx"
+    owner: youtrack
+  become: yes
+
+- file:
+    path: /var/lib/youtrack/tmp
+    state: directory
+    mode: "u=rwX,g=rX,o=-rwx"
+    owner: youtrack
+  become: yes
+
+
+
+- file:
+    path: /var/log/youtrack
+    state: directory
+    mode: "u=rwX,g=rX,o=-rwx"
+    owner: youtrack
+  become: yes
   changed_when: false
 
+- name: Download jar
+  become: yes
+  get_url:
+    url: "{{youtrack_dstr_url}}"
+    dest: /opt/youtrack/youtrack.jar
+    mode: 0640
+    force: no
+    owner: youtrack
 
+- name: create systemd unit
+  become: yes
+  template:
+    src: youtrack.service.j2
+    dest: /etc/systemd/system/youtrack.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: youtrack restart
+
+- name: create nginx site
+  become: yes
+  template:
+    src: youtrack.site.j2
+    dest: /etc/nginx/sites/youtrack.site
+    owner: root
+    group: root
+    mode: 0644
+  notify: nginx restart
+
+- systemd: 
+    daemon_reload: yes
+  become: yes
+
+- systemd: 
+    name: youtrack
+    state: started 
+  become: yes
+
+- ufw:
+    rule: allow
+    port: 80
+  become: yes

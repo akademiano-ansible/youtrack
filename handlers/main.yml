@@ -1,2 +1,14 @@
 ---
 # handlers file for mrdatamapper.akademiano_youtrack
+- name: nginx restart
+  systemd:
+    name: nginx
+    state: restarted
+  become: yes
+
+- name: youtrack restart
+  systemd:
+    name: youtrack
+    state: restarted
+  become: yes
+  notify: nginx restart
