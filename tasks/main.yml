@@ -7,59 +7,54 @@
     name: "{{list_youtrack_required_packages}}"
     state: latest
 
+- file:
+    path: "{{item}}"
+    state: directory
+    mode: "u=rwX,g=rX,o=-rwx"
+    owner: youtrack
+  loop:
+    - /opt/youtrack/home
+    - /opt/youtrack/src
+    - "{{youtrack_data_path}}"
+    - /var/lib/youtrack/backups
+    - /var/lib/youtrack/temp
+    - /var/lib/youtrack/logs
+  become: yes
+
 - name: Add the user 'youtrack'
   user:
     name: youtrack
     shell: /bin/bash
+    home: /opt/youtrack/home
   become: yes
-
-- file:
-    path: /opt/youtrack
-    state: directory
-    mode: "u=rwX,g=rX,o=-rwx"
-    owner: youtrack
-  become: yes
-
-- file:
-    path: /var/lib/youtrack/data
-    state: directory
-    mode: "u=rwX,g=rX,o=-rwx"
-    owner: youtrack
-  become: yes
-
-
-- file:
-    path: /var/lib/youtrack/backup
-    state: directory
-    mode: "u=rwX,g=rX,o=-rwx"
-    owner: youtrack
-  become: yes
-
-- file:
-    path: /var/lib/youtrack/tmp
-    state: directory
-    mode: "u=rwX,g=rX,o=-rwx"
-    owner: youtrack
-  become: yes
-
-
 
 - file:
     path: /var/log/youtrack
     state: directory
-    mode: "u=rwX,g=rX,o=-rwx"
+    mode: "u=rwX,g=rX,o=rX"
     owner: youtrack
+    group: youtrack
   become: yes
   changed_when: false
+
+- set_fact:
+    youtrack_path_jar: "/opt/youtrack/src/youtrack-{{youtrack_version}}.jar"
+    cacheable: true
 
 - name: Download jar
   become: yes
   get_url:
     url: "{{youtrack_dstr_url}}"
-    dest: /opt/youtrack/youtrack.jar
+    dest: "{{youtrack_path_jar}}"
+    sha256sum: "{{youtrack_dstr_sha256sum}}"
     mode: 0640
     force: no
     owner: youtrack
+
+- name: Configure for reversy proxy
+  become: yes
+  become_user: youtrack
+  command: "/usr/bin/java -jar {{youtrack_path_jar}} configure --listen-port 8080  --base-url:{{youtrack_url_scheme}}://{{youtrack_server_name}}"
 
 - name: create systemd unit
   become: yes
@@ -87,6 +82,7 @@
 
 - systemd: 
     name: youtrack
+    enabled: yes
     state: started 
   become: yes
 

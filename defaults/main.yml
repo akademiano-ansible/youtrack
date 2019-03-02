@@ -1,2 +1,14 @@
 ---
 # defaults file for mrdatamapper.akademiano_youtrack
+youtrack_server_name: youtrack.example
+youtrack_url_scheme: http
+
+list_youtrack_required_packages:
+  - openjdk-8-jre
+  - rng-tools
+
+youtrack_version: 2018.4.48733
+youtrack_dstr_url: "https://download.jetbrains.com/charisma/youtrack-{{youtrack_version}}.jar"
+youtrack_dstr_sha256sum: 8be912feeef410990c206192a278bc726c4ba73edb9f8739e7d90c2355259d0c
+
+youtrack_data_path: /var/lib/youtrack/teamsysdata

@@ -1,7 +1,2 @@
 ---
 # vars file for mrdatamapper.akademiano_youtrack
-
-list_youtrack_required_packages:
-  - openjdk-8-jre
-
-youtrack_dstr_url: https://download.jetbrains.com/charisma/youtrack-2018.3.46358.jar
