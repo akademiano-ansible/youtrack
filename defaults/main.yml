@@ -7,8 +7,9 @@ list_youtrack_required_packages:
   - openjdk-8-jre
   - rng-tools
 
-youtrack_version: 2018.4.48733
+youtrack_version: 2019.1.50680
 youtrack_dstr_url: "https://download.jetbrains.com/charisma/youtrack-{{youtrack_version}}.jar"
-youtrack_dstr_sha256sum: 8be912feeef410990c206192a278bc726c4ba73edb9f8739e7d90c2355259d0c
+youtrack_dstr_sha256sum: b194e188cb87158165dcc2a3a80c4bf3cd1feac6b65f80cde689cfcf7084d10a
+youtrack_default_page: "/issues"
 
 youtrack_data_path: /var/lib/youtrack/teamsysdata
